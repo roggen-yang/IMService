@@ -8,7 +8,6 @@ import (
 	rl "github.com/juju/ratelimit"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
-	"github.com/micro/go-micro/config"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/transport/grpc"
 	"github.com/micro/go-plugins/registry/etcdv3"
@@ -23,37 +22,34 @@ func main() {
 	userRpcFlag := cli.StringFlag{
 		Name:  "f",
 		Usage: "please use xxx -f config_rpc.json",
-		Value: "./config/config_rpc.json",
+		Value: "../config/config_rpc.json",
 	}
 	configFile := flag.String(userRpcFlag.Name, userRpcFlag.Value, userRpcFlag.Usage)
 	flag.Parse()
-	conf := new(userRpcConfig.RpcConfig)
-	if err := config.LoadFile(*configFile); err != nil {
-		log.Fatal(err)
-	}
-	if err := config.Scan(conf); err != nil {
+
+	if err := userRpcConfig.InitRpcConfig(*configFile); err != nil {
 		log.Fatal(err)
 	}
 
-	engineUser, err := xorm.NewEngine(conf.Engine.Name, conf.Engine.DataSource)
-	if err != nil {
-		log.Fatal(err)
-	}
 	etcdRegistry := etcdv3.NewRegistry(
 		func(options *registry.Options) {
-			options.Addrs = conf.Etcd.Address
+			options.Addrs = userRpcConfig.RpcConf.Etcd.Address
 		})
-	b := rl.NewBucketWithRate(float64(conf.Server.RateLimit), int64(conf.Server.RateLimit))
+	b := rl.NewBucketWithRate(float64(userRpcConfig.RpcConf.Server.RateLimit), int64(userRpcConfig.RpcConf.Server.RateLimit))
 	service := micro.NewService(
-		micro.Name(conf.Server.Name),
+		micro.Name(userRpcConfig.RpcConf.Server.Name),
 		micro.Registry(etcdRegistry),
-		micro.Version(conf.Version),
+		micro.Version(userRpcConfig.RpcConf.Version),
 		micro.Transport(grpc.NewTransport()),
 		micro.WrapHandler(ratelimit.NewHandlerWrapper(b, false)),
 		micro.Flags(userRpcFlag),
 	)
 	service.Init()
 
+	engineUser, err := xorm.NewEngine(userRpcConfig.RpcConf.Engine.Name, userRpcConfig.RpcConf.Engine.DataSource)
+	if err != nil {
+		log.Fatal(err)
+	}
 	userModel := model.NewMembersModel(engineUser)
 	userRpcServer := rpcServer.NewUserRpcServer(userModel)
 	if err := pb.RegisterUserHandler(service.Server(), userRpcServer); err != nil {

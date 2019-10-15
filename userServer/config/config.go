@@ -1,5 +1,9 @@
 package config
 
+import (
+	"github.com/micro/go-micro/config"
+)
+
 type (
 	RpcConfig struct {
 		Version string
@@ -36,3 +40,32 @@ type (
 		}
 	}
 )
+
+var (
+	RpcConf RpcConfig
+	ApiConf ApiConfig
+)
+
+func InitRpcConfig(configFile string) error {
+	conf := new(RpcConfig)
+	if err := config.LoadFile(configFile); err != nil {
+		return err
+	}
+	if err := config.Scan(conf); err != nil {
+		return err
+	}
+	RpcConf = *conf
+	return nil
+}
+
+func InitApiConfig(configFile string) error {
+	conf := new(ApiConfig)
+	if err := config.LoadFile(configFile); err != nil {
+		return err
+	}
+	if err := config.Scan(conf); err != nil {
+		return err
+	}
+	ApiConf = *conf
+	return nil
+}
