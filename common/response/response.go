@@ -3,6 +3,7 @@ package response
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/roggen-yang/IMService/common/errors"
+	"github.com/roggen-yang/IMService/common/i18n"
 	"gopkg.in/go-playground/validator.v8"
 	"net/http"
 )

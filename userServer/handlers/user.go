@@ -14,7 +14,7 @@ import (
 
 type UserHandlerInterface interface {
 	Login(l *protocol.LoginRequest) (*protocol.LoginResponse, error)
-	Register(r *protocol.RegisterRequest)(*protocol.RegisterResponse, error)
+	Register(r *protocol.RegisterRequest) (*protocol.RegisterResponse, error)
 }
 
 type UserHandler struct {
@@ -22,7 +22,7 @@ type UserHandler struct {
 }
 
 func NewUserHandler(userModel model.UserModelInterface) *UserHandler {
-	return &UserHandler{userModel:userModel}
+	return &UserHandler{userModel: userModel}
 }
 
 func (u *UserHandler) Login(l *protocol.LoginRequest) (*protocol.LoginResponse, error) {
@@ -33,7 +33,7 @@ func (u *UserHandler) Login(l *protocol.LoginRequest) (*protocol.LoginResponse, 
 	if user.Password != fmt.Sprintf("%x", md5.Sum([]byte(l.Password))) {
 		return nil, errors.UserNameOrPasswordErr
 	}
-	expired := time.Now().Add(148*time.Hour).Unix()
+	expired := time.Now().Add(148 * time.Hour).Unix()
 	accessToken, err := u.createAccessToken(expired)
 	if err != nil {
 		return nil, errors.UserNameOrPasswordErr
@@ -46,11 +46,11 @@ func (u *UserHandler) Login(l *protocol.LoginRequest) (*protocol.LoginResponse, 
 	}, nil
 }
 
-func (u *UserHandler) Register(r *protocol.RegisterRequest)(*protocol.RegisterResponse, error){
+func (u *UserHandler) Register(r *protocol.RegisterRequest) (*protocol.RegisterResponse, error) {
 	member := &protocol.Members{
-		Token:      uuid.Must(uuid.NewUUID()).String(),
-		Username:   r.Username,
-		Password:   fmt.Sprintf("%x", md5.Sum([]byte(r.Password))),
+		Token:    uuid.Must(uuid.NewUUID()).String(),
+		Username: r.Username,
+		Password: fmt.Sprintf("%x", md5.Sum([]byte(r.Password))),
 	}
 	if _, err := u.userModel.InsertMember(member); err != nil {
 		return nil, errors.CreateMemberErr

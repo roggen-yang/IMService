@@ -7,13 +7,13 @@
   },
   "Etcd": {
     "Address": [
-      "192.168.5.100:2379"
+      "10.10.30.152:2379"
     ],
     "UserName": "",
     "Password": ""
   },
   "Engine": {
     "Name": "mysql",
-    "DataSource": "root:123456@tcp(192.168.5.100:3306)/members?charset=utf8"
+    "DataSource": "root:123456@tcp(10.10.30.145:3306)/members?charset=utf8"
   }
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/config"
@@ -18,9 +19,9 @@ import (
 
 func main() {
 	userRpcFlag := cli.StringFlag{
-		Name:        "f",
-		Value:       "./config/config_api.json",
-		Usage:       "please use xxx -f config_rpc.json",
+		Name:  "f",
+		Value: "./config/config_api.json",
+		Usage: "please use xxx -f config_rpc.json",
 	}
 	configFile := flag.String(userRpcFlag.Name, userRpcFlag.Value, userRpcFlag.Usage)
 	flag.Parse()
@@ -37,7 +38,7 @@ func main() {
 		log.Fatal(err)
 	}
 	etcdRegistry := etcdv3.NewRegistry(
-		func(options *registry.Options){
+		func(options *registry.Options) {
 			options.Addrs = conf.Etcd.Address
 		})
 
@@ -47,7 +48,7 @@ func main() {
 		web.Version(conf.Version),
 		web.Flags(userRpcFlag),
 		web.Address(conf.Port),
-		)
+	)
 	router := gin.Default()
 	userModel := model.NewMembersModel(engineUser)
 	userHandler := handlers.NewUserHandler(userModel)
@@ -55,7 +56,7 @@ func main() {
 
 	userRouterGroup := router.Group("/user")
 	{
-		userRouterGroup.POST("/login",userController.Login)
+		userRouterGroup.POST("/login", userController.Login)
 		userRouterGroup.POST("/register", userController.Registry)
 	}
 	service.Handle("/", router)

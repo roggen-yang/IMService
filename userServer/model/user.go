@@ -8,7 +8,7 @@ import (
 type UserModelInterface interface {
 	FindByToken(token string) (*protocol.Members, error)
 	FindById(id int64) (*protocol.Members, error)
-	InsertMember(member *protocol.Members)(*protocol.Members, error)
+	InsertMember(member *protocol.Members) (*protocol.Members, error)
 	FindByUserName(userName string) (*protocol.Members, error)
 }
 
@@ -17,7 +17,7 @@ type MembersModel struct {
 }
 
 func NewMembersModel(mysql *xorm.Engine) *MembersModel {
-	return  &MembersModel{ mysql}
+	return &MembersModel{mysql}
 }
 
 func (m *MembersModel) FindByToken(token string) (*protocol.Members, error) {
@@ -44,7 +44,7 @@ func (m *MembersModel) FindByUserName(userName string) (*protocol.Members, error
 	return member, nil
 }
 
-func (m *MembersModel) InsertMember(member *protocol.Members)(*protocol.Members, error) {
+func (m *MembersModel) InsertMember(member *protocol.Members) (*protocol.Members, error) {
 	if _, err := m.mysql.Insert(member); err != nil {
 		return nil, err
 	}

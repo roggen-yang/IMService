@@ -12,10 +12,10 @@ type UserRpcServer struct {
 }
 
 func NewUserRpcServer(userModel model.UserModelInterface) *UserRpcServer {
-	return &UserRpcServer{userModel:userModel}
+	return &UserRpcServer{userModel: userModel}
 }
 
-func (u *UserRpcServer) FindByToken(ctx context.Context, req *pb.FindByTokenRequest, rsp *pb.UserResponse)error {
+func (u *UserRpcServer) FindByToken(ctx context.Context, req *pb.FindByTokenRequest, rsp *pb.UserResponse) error {
 	member, err := u.userModel.FindByToken(req.Token)
 	if err != nil {
 		return errors.NotFoundUserErr

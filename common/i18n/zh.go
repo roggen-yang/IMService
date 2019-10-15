@@ -7,21 +7,11 @@ const (
 )
 
 var ZhMessage = map[string]string{
-	"LoginRequest.Username.required": "用户名不能为空",
-	"LoginRequest.Password.required": "密码不能为空",
-
-
+	"LoginRequest.Username.required":    "用户名不能为空",
+	"LoginRequest.Password.required":    "密码不能为空",
 	"RegisterRequest.Username.required": "用户名不能为空",
 	"RegisterRequest.Password.required": "密码不能为空",
-
-	//SendRequest struct {
-	//		FromToken string    `json:"fromToken"  binding:"required"`
-	//		ToToken   string    `json:"toToken"  binding:"required"`
-	//		Body      string    `json:"body"  binding:"required"`
-	//		Timestamp time.Time `json:"timestamp"`
-	//	}
-
-	"SendRequest.FromToken.required": "TOKEN不能为空",
-	"SendRequest.ToToken.required":   "发送人TOKEN不能为空",
-	"SendRequest.Body.required":      "消息体不能为空",
+	"SendRequest.FromToken.required":    "TOKEN不能为空",
+	"SendRequest.ToToken.required":      "发送人TOKEN不能为空",
+	"SendRequest.Body.required":         "消息体不能为空",
 }

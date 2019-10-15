@@ -1,8 +1,9 @@
-package rpc
+package main
 
 import (
 	"flag"
 	"github.com/go-acme/lego/log"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	rl "github.com/juju/ratelimit"
 	"github.com/micro/cli"
@@ -20,9 +21,9 @@ import (
 
 func main() {
 	userRpcFlag := cli.StringFlag{
-		Name:        "f",
-		Usage:       "please use xxx -f config_rpc.json",
-		Value:       "./config/config_rpc.json",
+		Name:  "f",
+		Usage: "please use xxx -f config_rpc.json",
+		Value: "./config/config_rpc.json",
 	}
 	configFile := flag.String(userRpcFlag.Name, userRpcFlag.Value, userRpcFlag.Usage)
 	flag.Parse()
@@ -39,7 +40,7 @@ func main() {
 		log.Fatal(err)
 	}
 	etcdRegistry := etcdv3.NewRegistry(
-		func(options *registry.Options){
+		func(options *registry.Options) {
 			options.Addrs = conf.Etcd.Address
 		})
 	b := rl.NewBucketWithRate(float64(conf.Server.RateLimit), int64(conf.Server.RateLimit))
@@ -50,7 +51,7 @@ func main() {
 		micro.Transport(grpc.NewTransport()),
 		micro.WrapHandler(ratelimit.NewHandlerWrapper(b, false)),
 		micro.Flags(userRpcFlag),
-		)
+	)
 	service.Init()
 
 	userModel := model.NewMembersModel(engineUser)
