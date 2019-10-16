@@ -11,6 +11,10 @@ var (
 	UserNoLoginErr                         = NewBaseError("此用户没有登录！")
 	SendMessageErr                         = NewBaseError("发送消息失败！")
 	PublishMessageErr                      = NewBaseError("发送消息失败")
+	UserNotFoundErr                        = NewBaseError("用户不存在")
+	ImAddressErr                           = NewBaseError("请配置消息服务地址")
+	AddDataErr                             = NewBaseError("维护关系错误")
+	imRpcModelMapErr                       = NewBaseError("没有找到对应的RPC服务")
 )
 
 type BaseError struct {
