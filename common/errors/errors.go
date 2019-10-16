@@ -8,6 +8,9 @@ var (
 	AccessTokenValidErr                    = NewBaseError("AccessToken 验证失败")
 	AccessTokenValidationErrorExpiredErr   = NewBaseError("AccessToken过期")
 	AccessTokenValidationErrorMalformedErr = NewBaseError("AccessToken格式错误")
+	UserNoLoginErr                         = NewBaseError("此用户没有登录！")
+	SendMessageErr                         = NewBaseError("发送消息失败！")
+	PublishMessageErr                      = NewBaseError("发送消息失败")
 )
 
 type BaseError struct {
